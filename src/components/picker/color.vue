@@ -12,26 +12,37 @@
       </t-button>
     </div>
     <div class="umo-color-picker-group">
-      <div
+      <t-popup
         v-for="(item, index) in options.dicts?.colors"
         :key="index"
-        class="umo-color-picker-item"
-        :style="{ backgroundColor: item }"
-        @click="selectColor(item)"
-      ></div>
+        :content="item"
+        destroy-on-close
+      >
+        <div
+          class="umo-color-picker-item"
+          :title="item"
+          :style="{ backgroundColor: item }"
+          @click="selectColor(item)"
+        ></div>
+      </t-popup>
     </div>
     <div
       class="umo-color-picker-group-title"
       v-text="t('colorPicker.standard')"
     ></div>
     <div class="umo-color-picker-group">
-      <div
+      <t-popup
         v-for="(item, index) in standardColors"
         :key="index"
-        class="umo-color-picker-item"
-        :style="{ backgroundColor: item }"
-        @click="selectColor(item)"
-      ></div>
+        :content="item"
+        destroy-on-close
+      >
+        <div
+          class="umo-color-picker-item"
+          :style="{ backgroundColor: item }"
+          @click="selectColor(item)"
+        ></div>
+      </t-popup>
     </div>
     <div
       v-if="$recent.colors.length > 0"
@@ -91,10 +102,9 @@ const editor = inject('editor')
 const options = inject('options')
 const $recent = useState('recent', options)
 // prettier-ignore
-const standardColors = ['#B12318', '#EB3323', '#F6C143', '#FFFE55', '#A0CD63', '#4FAD5B', '#4CAFEA', '#2D70BA', '#06215C', '#68389B']
+const standardColors = ['#B12318', '#EB3323', '#F6C143', '#FFFE55', '#A0CD63', '#4FAD5B', '#4CAFEA', '#2D70BA', '#06215C', 'transparent']
 
 const color = $ref(props.defaultColor)
-
 // 更多颜色
 const moreColorPicker = $ref(false)
 const colorChange = (color, ctx) => {

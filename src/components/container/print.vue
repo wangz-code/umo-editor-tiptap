@@ -172,22 +172,25 @@ watch(
   },
 )
 
-window.printPage = ()=>{
+window.printPage = () => {
   editor.value?.commands.blur()
   iframeCode = getIframeCode()
 
   setTimeout(() => {
     function downloadDoc(iframe, filename = 'doc.html') {
-    const blob = new Blob([iframe], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 150);
-}
-downloadDoc(iframeCode);
+      const blob = new Blob([iframe], { type: 'text/html;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      setTimeout(() => {
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }, 150)
+    }
+    downloadDoc(iframeCode)
   }, 300)
 }
 </script>

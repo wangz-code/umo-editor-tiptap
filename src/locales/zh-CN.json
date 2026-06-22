@@ -240,6 +240,13 @@
       "text": "背景颜色",
       "tip": "单元格背景颜色"
     },
+    "cellBorderColor": {
+      "cell": "单元格",
+      "top": "上边框",
+      "right": "右边框",
+      "left": "左边框",
+      "bottom": "下边框"
+    },
     "deleteColumn": {
       "text": "删除列",
       "title": "删除表格列",
@@ -791,8 +798,8 @@
     "title": "打印文档",
     "message": "打印文档前，请确保所有页面中的图片已加载完毕。为确保所有内容正确显示，请在打印框中勾选 “背景图形”选项，并将 “边距”设为“无”。",
     "confirm": "立即打印",
-    "import":"导入",
-    "previewPdf":"预览"
+    "import": "导入",
+    "previewPdf": "预览"
   },
   "dialog": {
     "cancel": "取消"
