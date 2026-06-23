@@ -164,6 +164,7 @@ if (options.value.toolbar?.menus) {
     (item) => defaultToolbarMenus.filter((menu) => menu.value === item)[0],
   )
 }
+
 if (!toolbarActive.value) {
   toolbarActive.value = toolbarMenus[0].value
 }

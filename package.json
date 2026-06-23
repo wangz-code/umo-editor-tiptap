@@ -49,7 +49,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "concurrently \"vite --port 9000\" \"node topdf/server.js\"",
+    "dev": "concurrently \"vite --port 9000\" \"node server/app.js\"",
     "format": "oxfmt --write .",
     "lint": "oxlint --fix src",
     "analyzer": "vite-bundle-visualizer",
@@ -100,6 +100,7 @@
     "file-saver": "2.0.5",
     "hotkeys-js": "4.0.2",
     "jsbarcode": "3.12.3",
+    "jsdom": "^29.1.1",
     "katex": "0.16.33",
     "lowlight": "3.3.0",
     "nzh": "1.0.14",

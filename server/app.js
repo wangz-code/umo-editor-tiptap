@@ -1,7 +1,7 @@
 /*
  * @Author: wangqz
  * @Date: 2026-06-18
- * @LastEditTime: 2026-06-22
+ * @LastEditTime: 2026-06-23
  * @Description: 后台 html-to-pdf
  */
 import express from 'express'
@@ -9,6 +9,7 @@ import { chromium } from 'playwright'
 import pLimit from 'p-limit'
 import { v4 as uuidv4 } from 'uuid' // 可选，用于日志追踪
 import { PDF_PORT } from './config.js'
+import { fillDemoData } from './billRender.js'
 const app = express()
 app.use(express.json({ limit: '10mb' })) // 限制请求体大小，防止恶意超大HTML
 
@@ -97,11 +98,10 @@ async function htmlToPdf(htmlString, options = {}) {
 }
 
 // ---------- 路由 ----------
-app.post('/html2pdf', async (req, res) => {
+app.post('/api/htmlGenPdf', async (req, res) => {
   const requestId = uuidv4().slice(0, 8)
   try {
     const { html, format, printBackground, margin } = req.body
-    // 1. 校验参数
     if (!html) {
       return res.status(400).json({ error: 'Missing "html" field' })
     }
@@ -114,12 +114,12 @@ app.post('/html2pdf', async (req, res) => {
       })
     }
 
-    // 2. 并发控制：使用 p-limit 包装
+    const finallyHtml = fillDemoData(html)
     const pdfBuffer = await limit(async () => {
       console.log(
         `[${requestId}] Processing (concurrency: ${limit.activeCount}/${limit.concurrency})`,
       )
-      return await htmlToPdf(html, { format, printBackground, margin })
+      return await htmlToPdf(finallyHtml, { format, printBackground, margin })
     })
 
     // 3. 返回 PDF 流

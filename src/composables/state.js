@@ -29,8 +29,5 @@ export function useState(key, editorOptions) {
   if (key === 'options') {
     return useStorage(storageKey, editorOptions)
   }
-  if (key === 'toolbarActive') {
-    return useStorage(storageKey, 'base')
-  }
   throw new Error('[useStorage]', { cause: 'Key is not valid' })
 }

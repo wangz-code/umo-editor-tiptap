@@ -9,7 +9,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 import pkg from './package.json'
 import copyright from './src/utils/copyright'
-import { PDF_PORT } from './topdf/config'
+import { PDF_PORT } from './server/config'
 
 // Plugin configurations
 const vuePlugins = {
@@ -109,8 +109,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // 将所有以 /html2pdf 开头的请求转发到后端服务
-      '/html2pdf': {
+      '/api': {
         target: `http://localhost:${PDF_PORT}`,
         changeOrigin: true,
       },

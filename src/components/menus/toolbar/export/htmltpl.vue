@@ -1,11 +1,11 @@
 <!--
  * @Author: wangqz
- * @Date: 2026-06-17
+ * @Date: 2026-06-23
  * @LastEditTime: 2026-06-23
  * @Description: content
 -->
 <template>
-  <menus-button ico="file-json" :text="t('toolbar.export')" huge @menu-click="saveJSONFile" />
+  <menus-button ico="html5" text="HTML模板" huge @menu-click="saveHtmlFile" />
 </template>
 
 <script setup>
@@ -13,17 +13,19 @@ import { saveAs } from 'file-saver'
 
 const editor = inject('editor')
 const options = inject('options')
+const getIframeCode = inject('getIframeCode')
 
-const saveJSONFile = () => {
+
+const saveHtmlFile = () => {
   if (!editor.value) {
     return
   }
-  const blob = new Blob([JSON.stringify(editor.value.getJSON(), null, 2)], {
-    type: 'application/json;charset=utf-8',
+  const blob = new Blob([getIframeCode({isTemplate:true})], {
+    type: 'text/html;charset=utf-8',
   })
   const { title } = options.value.document
   const filename =
     title !== '' ? options.value.document?.title : t('document.untitled')
-  saveAs(blob, `${filename}.json`)
+  saveAs(blob, `${filename}.html`)
 }
 </script>

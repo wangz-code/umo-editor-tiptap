@@ -30,7 +30,27 @@ const templates = [
   },
 ]
 
-const options = {}
+const options = {
+   templates,
+   disableExtensions: [],
+   async onFileUpload(file) {
+    if (!file) {
+      throw new Error('没有找到要上传的文件')
+    }
+    console.log('onUpload', file)
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    return {
+      id: shortId(),
+      url: file.url || URL.createObjectURL(file),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    }
+  },
+  onFileDelete(id, url, type) {
+    console.log(id, url, type)
+  },
+}
 </script>
 
 <style>

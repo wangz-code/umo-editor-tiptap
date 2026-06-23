@@ -78,6 +78,7 @@ import { getSelectionNode, getSelectionText } from '@/utils/selection'
 import { shortId } from '@/utils/short-id'
 import { getCurrentInstance } from 'vue'
 import { useState } from '@/composables/state'
+import { getIframeCode } from './print'
 const { toBlob, toJpeg, toPng } = domToImage
 
 defineOptions({ name: 'UmoEditor' })
@@ -123,14 +124,17 @@ const historyRecords = ref({
 
 const container = $ref(`#umo-editor-${shortId(4)}`)
 const defaultOptions = inject('defaultOptions', {})
-const options = ref(getOpitons(props, defaultOptions))
-const config = useState('options', {})
-options.value.page = { ...options.value.page, ...config.value.page }
-options.value.onSave = async (content, page, document) => {
-  config.value = { content, page, document }
-  return Promise.resolve('保存成功!')
-}
-
+const config = useState('options', { content: {}, page: {}, document: {} })
+const defOpts = getOpitons(props, defaultOptions)
+const options = ref({
+  ...defOpts,
+  page: { ...defOpts.page, ...config.value.page },
+  document: config.value.document,
+  onSave: async (content, page, document) => {
+    config.value = { content, page, document }
+    return Promise.resolve('保存成功!')
+  },
+})
 const editor = ref(null)
 const savedAt = ref(null)
 const page = ref({})
@@ -165,6 +169,8 @@ provide('uploadFileMap', uploadFileMap)
 provide('destroyed', destroyed)
 provide('historyRecords', historyRecords)
 provide('typeWriterIsRunning', typeWriterIsRunning)
+provide("getIframeCode",getIframeCode(page,options,container))
+
 watch(
   page,
   (val) => {
@@ -219,7 +225,7 @@ watch(
 )
 
 let toolbarKey = $ref(shortId())
-let toolbarActive = useState('toolbarActive', 'base')
+let toolbarActive = ref(null)
 provide('toolbarActive', toolbarActive)
 watch(
   () => [options.value.document?.readOnly, editor.value?.isEditable],

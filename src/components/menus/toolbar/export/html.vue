@@ -7,12 +7,14 @@ import { saveAs } from 'file-saver'
 
 const editor = inject('editor')
 const options = inject('options')
+const getIframeCode = inject('getIframeCode')
+
 
 const saveHtmlFile = () => {
   if (!editor.value) {
     return
   }
-  const blob = new Blob([editor.value.getHTML()], {
+  const blob = new Blob([getIframeCode()], {
     type: 'text/html;charset=utf-8',
   })
   const { title } = options.value.document
