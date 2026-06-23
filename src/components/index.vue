@@ -77,6 +77,7 @@ import { getOpitons } from '@/utils/options'
 import { getSelectionNode, getSelectionText } from '@/utils/selection'
 import { shortId } from '@/utils/short-id'
 import { getCurrentInstance } from 'vue'
+import { useState } from '@/composables/state'
 const { toBlob, toJpeg, toPng } = domToImage
 
 defineOptions({ name: 'UmoEditor' })
@@ -123,6 +124,13 @@ const historyRecords = ref({
 const container = $ref(`#umo-editor-${shortId(4)}`)
 const defaultOptions = inject('defaultOptions', {})
 const options = ref(getOpitons(props, defaultOptions))
+const config = useState('options', {})
+options.value.page = { ...options.value.page, ...config.value.page }
+options.value.onSave = async (content, page, document) => {
+  config.value = { content, page, document }
+  return Promise.resolve('保存成功!')
+}
+
 const editor = ref(null)
 const savedAt = ref(null)
 const page = ref({})
@@ -157,12 +165,20 @@ provide('uploadFileMap', uploadFileMap)
 provide('destroyed', destroyed)
 provide('historyRecords', historyRecords)
 provide('typeWriterIsRunning', typeWriterIsRunning)
-
+watch(
+  page,
+  (val) => {
+    config.value.page = { ...config.value.page, ...val }
+  },
+  { deep: true },
+)
 watch(
   () => options.value.page,
   ({
     layouts,
     defaultBackground,
+    size,
+    margin,
     defaultMargin,
     defaultOrientation,
     watermark,
@@ -173,8 +189,8 @@ watch(
   }) => {
     page.value = {
       layout: $layout.value || layouts[0],
-      size: options.value.dicts?.pageSizes.find((item) => item.default),
-      margin: defaultMargin,
+      size,
+      margin: margin || defaultMargin,
       background: defaultBackground,
       orientation: defaultOrientation,
       watermark,
@@ -190,6 +206,7 @@ watch(
         zoom: 100,
       },
     }
+
     editor.value?.commands.showInvisibleCharacters(showBreakMarks)
   },
   { immediate: true, deep: true },
@@ -202,7 +219,7 @@ watch(
 )
 
 let toolbarKey = $ref(shortId())
-let toolbarActive = ref(null)
+let toolbarActive = useState('toolbarActive', 'base')
 provide('toolbarActive', toolbarActive)
 watch(
   () => [options.value.document?.readOnly, editor.value?.isEditable],
@@ -532,6 +549,8 @@ const localeConfig = $ref({
 
 // Options Setup
 const setOptions = (value) => {
+  console.log('setOptions log==>', value)
+
   try {
     options.value = getOpitons(value)
     const $locale = useStorage('umo-editor:locale', options.value.locale)

@@ -37,6 +37,11 @@ export default {
       fontWeight: 'normal',
       text: '',
     },
+    size: {
+      height: 29.7,
+      label: 'A4',
+      width: 21,
+    },
   },
   document: {
     title: '',

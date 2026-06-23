@@ -36,15 +36,13 @@
               destroyOnClose: true,
               attach: container,
             }"
+            :value="pageOptions.size?.label"
             @change="selectPageSize"
           >
-            <template #valueDisplay>
-              {{ l(pageOptions.size?.label) }}
-            </template>
             <t-option
               v-for="(item, index) in options.dicts?.pageSizes"
               :key="index"
-              :value="index"
+              :value="item.label"
               :title="`${l(item.label)} (${item.width}×${item.height}${t('page.size.cm')})`"
             >
               <div class="label" v-text="l(item.label)"></div>
@@ -218,6 +216,8 @@
 </template>
 
 <script setup>
+import { toValue } from 'vue'
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -229,17 +229,7 @@ const emits = defineEmits(['close'])
 const container = inject('container')
 const page = inject('page')
 const options = inject('options')
-
-let pageOptions = $ref({})
-watch(
-  () => props.visible,
-  (visible) => {
-    if (visible) {
-      pageOptions = JSON.parse(JSON.stringify(page.value))
-    }
-  },
-  { immediate: true },
-)
+const pageOptions = $ref({ ...toValue(page.value) })
 
 // 页面大小
 const selectPageSize = (value) => {
@@ -277,7 +267,7 @@ const inputPageMargin = (value, field) => {
 }
 
 const onConfirm = () => {
-  page.value = pageOptions
+  page.value = { ...pageOptions }
   emits('close')
 }
 </script>
