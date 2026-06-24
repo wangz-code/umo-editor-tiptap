@@ -5,7 +5,12 @@
  * @Description: content
 -->
 <template>
-  <menus-button ico="file-json" :text="t('toolbar.export')" huge @menu-click="saveJSONFile" />
+  <menus-button
+    ico="file-json"
+    :text="t('export.json.text')"
+    huge
+    @menu-click="saveJSONFile"
+  />
 </template>
 
 <script setup>

@@ -91,7 +91,7 @@ const togglePop = (record) => {
   record.popVisible = !record.popVisible
 }
 /**
- * 判断是否为单元格节点（兼容 td(tableCell) / th(tableHeader)）
+ * 判断是否为单元格节点
  */
 function isTableCellNode(node) {
   return ['tableCell', 'tableHeader'].includes(node.type.name)
@@ -197,7 +197,7 @@ function getBottomCellNode(_pos, row, col, doc) {
  */
 function getCellSelectionRange() {
   if (!editor.value) return null
-  const state = editor.value.state
+  const { state } = editor.value
   const { selection } = state
 
   // 官方判断单元格选区
@@ -238,8 +238,8 @@ function getCellSelectionRange() {
 function setSelectionOuterBorderColor(side, color) {
   const editorIns = editor.value
   if (!editorIns) return
-  const state = editorIns.state
-  const doc = state.doc
+  const { state } = editorIns
+  const { doc } = state
 
   const range = getCellSelectionRange()
   // 单选单元格降级逻辑
@@ -250,7 +250,7 @@ function setSelectionOuterBorderColor(side, color) {
     const rowIndex = $cell.index($cell.depth - 1)
     const colIndex = $cell.index()
 
-    let tr = state.tr
+    let { tr } = state
     // 1、修改当前单元格目标边框
     const propSelf = `border-${side}-color`
     let styleSelf = cellNode.attrs.style || ''
@@ -322,7 +322,7 @@ function setSelectionOuterBorderColor(side, color) {
 
   // 多选单元格批量处理
   const { minRow, maxRow, minCol, maxCol, cells } = range
-  let tr = state.tr
+  let { tr } = state
 
   cells.forEach(({ pos, row, col, node }) => {
     let isOuterEdge = false

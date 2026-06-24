@@ -77,7 +77,6 @@
           </div>
           <div class="umo-virtual-group">
             <menus-toolbar-base-print v-if="!disableMenu('print')" />
-          
           </div>
           <div class="virtual-group is-slot">
             <slot name="toolbar_base" toolbar-mode="ribbon" />
@@ -263,21 +262,19 @@
         </template>
         <template v-if="currentMenu === 'export'">
           <div class="umo-virtual-group">
-            <menus-toolbar-export-json v-if="!disableMenu('export-json')" />
             <menus-toolbar-export-html v-if="!disableMenu('export-html')" />
-            <menus-toolbar-export-htmltpl v-if="!disableMenu('export-html')" />
             <menus-toolbar-export-image v-if="!disableMenu('export-image')" />
             <menus-toolbar-export-pdf v-if="!disableMenu('export-pdf')" />
             <menus-toolbar-export-text v-if="!disableMenu('export-text')" />
-            
+            <menus-toolbar-export-json v-if="!disableMenu('export-json')" />
           </div>
           <div class="umo-virtual-group">
             <menus-toolbar-export-share v-if="!disableMenu('share')" />
             <menus-toolbar-export-embed v-if="!disableMenu('embed')" />
           </div>
           <div class="umo-virtual-group">
-            <menus-toolbar-base-import />
-            <menus-toolbar-base-pdf />
+            <menus-toolbar-export-import v-if="!disableMenu('import-json')" />
+            <menus-toolbar-export-htmltopdf />
           </div>
           <div class="virtual-group is-slot">
             <slot name="toolbar_export" toolbar-mode="ribbon" />

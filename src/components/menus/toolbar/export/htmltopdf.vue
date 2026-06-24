@@ -1,13 +1,8 @@
-<!--
- * @Author: wangqz
- * @Date: 2026-06-18
- * @LastEditTime: 2026-06-23
- * @Description: content
--->
 <template>
   <menus-button
     ico="file-pdf"
-    :text="t('print.previewPdf')"
+    tooltip="node后端解析HTML填充变量生成pdf"
+    :text="t('export.html.genpdf')"
     huge
     @menu-click="previewPDF"
   />
@@ -22,25 +17,24 @@ const getIframeCode = inject('getIframeCode')
 
 const generatePdf = async (htmlContent, options = {}) => {
   try {
+    const params = {
+      html: htmlContent,
+      format: options.format || 'A4',
+      printBackground:
+        options.printBackground !== undefined ? options.printBackground : true,
+      margin: options.margin || {
+        top: '20px',
+        bottom: '20px',
+        left: '20px',
+        right: '20px',
+      },
+    }
     const response = await fetch('/api/htmlGenPdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        html: htmlContent,
-        format: options.format || 'A4',
-        printBackground:
-          options.printBackground !== undefined
-            ? options.printBackground
-            : true,
-        margin: options.margin || {
-          top: '20px',
-          bottom: '20px',
-          left: '20px',
-          right: '20px',
-        },
-      }),
+      body: JSON.stringify(params),
     })
 
     if (!response.ok) {
@@ -59,12 +53,11 @@ const generatePdf = async (htmlContent, options = {}) => {
 const previewPDF = async () => {
   useMessage('loading', {
     attach: container,
-    content: t('print.previewPdf'),
+    content: t('export.html.genpdf'),
     closeBtn: true,
   })
   editor.value?.commands.blur()
-  const iframeCode = getIframeCode()
-
+  const iframeCode = getIframeCode({ isTemplate: true })
   const blob = await generatePdf(iframeCode)
   const pdfurl = URL.createObjectURL(blob)
   const uniqueId = `pre-pdf-${Date.now()}`
@@ -73,7 +66,7 @@ const previewPDF = async () => {
     theme: 'info',
     width: '800px',
     footer: false,
-    header: t('print.previewPdf'),
+    header: t('export.html.genpdf'),
     body: () => {
       return h('div', { id: uniqueId, style: 'width:100%;height:800px;' }, '')
     },
